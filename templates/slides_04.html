@@ -1,0 +1,1168 @@
+{% extends "template.html" %}
+
+{% block slides %}
+
+<section>
+    <h3>Mejoramiento de im&aacute;genes</h3>
+</section>
+
+<section>
+    <h3>Mejoramiento de im&aacute;genes</h3>
+    <ul>
+        <li><a href="#/2">Introducci&oacute;n al Mejoramiento de Im&aacute;genes</a></li>
+        <li><a href="#/12">Eliminaci&oacute;n de ruido</a></li>
+        <li><a href="#/24"><i>Deblurring</i></a></li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Mejoramiento de im&aacute;genes</h3>
+        <ul>
+            <li class="fragment">Procesamiento de la imagen</li>
+            <li class="fragment">
+                Resaltar caracter&iacute;sticas de la imagen
+                <ul>
+                    <li>objetos o regiones</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                M&aacute;s f&aacute;cil de percibir o detectar
+                <ul>
+                    <li class="fragment">sistema visual humano</li>
+                    <li class="fragment">sistema autom&aacute;tico</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">
+                Se logra de muchas formas
+                <ul>
+                    <li class="fragment">eliminando ruido</li>
+                    <li class="fragment">mejorando contraste</li>
+                    <li class="fragment">resaltando contornos o bordes</li>
+                    <li class="fragment">otros ...</li>
+                </ul>
+            </li>
+            <li class="fragment">Obtener una imagen a partir de varias</li>
+            <li class="fragment">... o diferentes versiones de la imagen mejorada</li>
+            <li class="fragment">Pueden ser t&eacute;cnicas irreversibles</li>
+            <li class="fragment">La informaci&oacute;n tiene que estar presente</li>
+            <li class="fragment">
+                Originar efectos indeseados
+                <ul>
+                    <li class="fragment">ruido</li>
+                    <li class="fragment">p&eacute;rdida de informaci&oacute;n</li>
+                    <li class="fragment">artefactos</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>El sistema visual humano</h3>
+        <img src={{ url_for('static', filename='figures/human_eye.svg') }}>
+        <small> 1.Procesos ciliares
+            2. C&aacute;mara posterior
+            3.Iris
+            4.Pupila
+            5.C&oacute;rnea
+            6.C&aacute;mara anterior
+            7.M&uacute;sculo ciliar
+            8.Ligamento suspensorio del cristalino
+            9.Cristalino
+            10.Humor v&iacute;treo
+            11.F&oacute;vea
+            12.Vasos sangu&iacute;neos de la retina
+            13.Nervio &oacute;ptico
+            14.Disco &oacute;ptico
+            15.Conducto hialoideo
+            16.Escler&oacute;tica
+            17.Coroides
+            18.Retina
+        </small>
+    </section>
+
+    <section>
+        <h3>Ilusiones &oacute;pticas</h3>
+        <img src={{ url_for('static', filename='figures/optical_illusion.png') }}>
+        <br><br>
+        <p>Tarea #1: leer del Cap&iacute;tulo 2 del DIP el ep&iacute;grafe 2.1</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Histograma de una imagen</h3>
+        <p class="fragment">\[ h(i) = \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} \delta(f(m,n) - i) \,\,\,\, i=0, 1, ..., P-1\]</p>
+        <br>
+        <p class="fragment">donde $f$ representa la imagen, y $P$ la cantidad de valores de p&iacute;xeles permitidos.</p>
+        <p class="fragment">La funci&oacute;n $\delta$ se define como:</p>
+        <p class="fragment">\[\delta(w)=\begin{cases} 1, \,\, w=0 \\ 0, \,\, \text{en otro caso}\end{cases}\]</p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">Una gr&aacute;fica</li>
+            <li class="fragment">N&uacute;mero de ocurrencias de cada intensidad permitida</li>
+            <li class="fragment">
+                Define una funci&oacute;n de densidad (normalizando)
+                <ul>
+                    <li class="fragment">qu&eacute; probabilidad tiene un valor de ocurrir en la imagen</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                &Uacute;til para extraer informaci&oacute;n
+                <ul>
+                    <li class="fragment">contraste</li>
+                    <li class="fragment">distribuci&oacute;n del color</li>
+                    <li class="fragment">otros ...</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Convoluci&oacute;n (dominio espacial)</h3>
+        <p class="fragment">La convoluci&oacute;n de una imagen $f$ con un <i>kernel</i> $w$ se define como:</p>
+        <p class="fragment">\[g(m,n) = w(k,l) \ast f(m,n) = \sum_{k=-K}^{K} \sum_{l=-L}^{L} w(k,l)f(m-k,n-l)\]</p>
+        <br>
+        <ul>
+            <li class="fragment">$w$ es un <i>kernel</i> de $(2K+1) \times (2L+1)$</li>
+            <li class="fragment">el centro del <i>kernel</i> es en $(k,l)=(0,0)$</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">Variedad de <i>kernels</i></li>
+            <li class="fragment">para detectar bordes $\begin{pmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{pmatrix}$ <p><br></p></li>
+            <li class="fragment">para agudizar la imagen $\begin{pmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{pmatrix}$ <p><br></p></li>
+            <li class="fragment">para desenfocar $\frac{1}{9}\begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$ <p><br></p></li>
+            <li class="fragment">Tener en cuenta los l&iacute;mites de la imagen (<i>padding</i>)</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Escalamiento de intensidad</h3>
+        <p class="fragment">
+            Si $f_1$ y $f_2$ definen una banda de intensidad de inter&eacute;s,
+            <br>
+            la transformaci&oacute;n de escalamiento queda como:
+        </p>
+        <p class="fragment">\[e = \begin{cases}f, \,\, f_1 \leq f \leq f_2 \\ 0, \,\, \text{en otro caso} \end{cases}\]</p>
+        <p class="fragment">\[g = [\frac{e - f_1}{f_2 - f_1}]f_{max}\]</p>
+        <br>
+        <ul>
+            <li class="fragment">$e$ es una imagen intermedia</li>
+            <li class="fragment">$g$ es la imagen resultante</li>
+            <li class="fragment">$f_{max}$ m&aacute;xima intensidad del <i>display</i></li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">M&eacute;todo muy sencillo</li>
+            <li class="fragment">
+                Rango de valores de la imagen muy grande
+                <ul>
+                    <li class="fragment">pobre en el sistema de visualizaci&oacute;n</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                Objetivo general
+                <ul>
+                    <li class="fragment">concentrarse en bandas de intensidad espec&iacute;ficas</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Ecualizaci&oacute;n del histograma</h3>
+        <ul>
+            <li class="fragment">Y si no conocemos la banda de intensidad de inter&eacute;s?</li>
+            <li class="fragment">Maximizar la informaci&oacute;n de la imagen</li>
+            <li class="fragment">Mejor distribuci&oacute;n de las intensidades en la imagen</li>
+            <li class="fragment">Tratar de que cada $h(i)$ se aproxime a $\frac{MN}{P}$</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Histograma acumulativo</h3>
+        <p class="fragment">\[ H(j) = \frac{1}{MN} \sum_{i=0}^{j} h(i) \,\,\,\, j=0, 1, ..., P-1\]</p>
+        <p class="fragment">La imagen $g(m,n)$ tendr&aacute; un histograma uniforme maximal si se define como:</p>
+        <p class="fragment">\[g(m,n) = (P-1)H(f(m,n))\]</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Ecualizaci&oacute;n local del histograma</h3>
+        <p class="fragment">\[ h_{LA}(m,n)(i) = \sum_{m=-K}^{K} \sum_{n=-L}^{L} \delta(f(m + l, n + k) - i) \]</p>
+        <br>
+        <p class="fragment">\[ H_{LA}(m,n)(j) = \frac{1}{(2K+1)(2L+1)} \sum_{i=0}^{j}h_{LA}(m,n)(i) \]</p>
+        <br>
+        <p class="fragment">La imagen mejorada $g(m,n)$ se define como:</p>
+        <p class="fragment">\[ g(m,n) = (P-1)H_{LA}(m,n)(f(m,n)) \]</p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">Est&aacute; basada en la t&eacute;cnica cl&aacute;sica</li>
+            <li class="fragment">Regiones peque&ntilde;as y solapadas de la imagen</li>
+            <li class="fragment">
+                Se emplean <i>kernels</i> m&aacute;s grandes
+                <ul>
+                    <li>por ejemplo $K=L=15$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Resaltado de bordes</h3>
+        <ul>
+            <li class="fragment">Bordes o contornos</li>
+            <li class="fragment">Importancia en la comprensi&oacute;n de contenido</li>
+            <li class="fragment">
+                Detecci&oacute;n selectiva
+                <ul>
+                    <li class="fragment">horizontales</li>
+                    <li class="fragment">verticales</li>
+                    <li class="fragment">todas direcciones</li>
+                </ul>
+            </li>
+            <li class="fragment">Amplia variedad de <i>kernels</i> para lograrlo</li>
+            <li class="fragment">Diferencia entre detecci&oacute;n y resaltado</li>
+            <li class="fragment">
+                T&eacute;cnicas m&aacute;s avanzadas
+                <ul>
+                    <li class="fragment">detector de contornos de Canny</li>
+                </ul>
+            </li>
+            <li class="fragment">Se pueden combinar con la imagen original</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Detectores de bordes conocidos</h3>
+        <ul>
+            <li class="fragment">
+                Prewitt $\,\,\, w_{H}(k,l) = \begin{pmatrix} 1 & 1 & 1 \\ 0 & 0 & 0 \\ -1 & -1 & -1 \end{pmatrix}$
+                <br><br>
+            </li>
+            <li class="fragment">
+                Sobel $\,\,\, w_{H}(k,l) = \begin{pmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{pmatrix}$
+                <br><br>
+            </li>
+            <li class="fragment">Para el caso vertical $\,\,\, w_{V} = w_{H}^t$</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Detectores de bordes conocidos</h3>
+        <p class="fragment">En todas las direcciones</p>
+        <p class="fragment">
+            \[  w(k,l) =
+                \begin{pmatrix}
+                    -\frac{1}{8} &  -\frac{1}{8} &  -\frac{1}{8} \\
+                    -\frac{1}{8} &       1       &  -\frac{1}{8} \\
+                    -\frac{1}{8} &  -\frac{1}{8} &  -\frac{1}{8}
+                \end{pmatrix}
+            \]
+        </p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Sustracci&oacute;n de im&aacute;genes</h3>
+        <ul>
+            <li class="fragment">Resaltar diferencias entre im&aacute;genes</li>
+            <li class="fragment">Deben estar tomadas bajo las mismas condiciones</li>
+            <li class="fragment">Quiz&aacute;s hacer corregistro antes</li>
+            <li class="fragment">
+                Rango din&aacute;mico muy peque&ntilde;o
+                <ul>
+                    <li class="fragment">Escalar los valores de intensidad</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Sustracci&oacute;n de im&aacute;genes</h3>
+        <p class="fragment">Sean dos im&aacute;genes $f_1(m,n)$ y $f_2(m,n)$.</p>
+        <p class="fragment">
+            La imagen $g(m,n)$ mejorada mediante sustracci&oacute;n
+            <br>
+            se puede obtener a trav&eacute;s de:
+        </p>
+        <p class="fragment">\[b(m,n) = f_1(m,n) - f_2(m,n)\]</p>
+        <br>
+        <p class="fragment">\[g(m,n) = f_{max} \cdot (\frac{b(m,n) - min\{b(m,n)\}}{max\{b(m,n)\} - min\{b(m,n)\}})\]</p>
+    </section>
+</section>
+
+<section>
+    <h3>Otras t&eacute;cnicas</h3>
+    <ul>
+        <li class="fragment">Eliminar ruido</li>
+        <li class="fragment">Dominio frecuencia (Fourier)</li>
+        <li class="fragment"><i>Wavelets</i></li>
+        <li class="fragment">Adaptativos</li>
+        <li class="fragment">Difusi&oacute;n anisotr&oacute;pica</li>
+    </ul>
+    <br><br>
+    <p class="fragment">Tarea #2: investigar sobre estas t&eacute;cnicas</p>
+</section>
+
+<section>
+    <h3>Eliminaci&oacute;n de ruido</h3>
+</section>
+
+<section>
+    <h3>Qu&eacute; es ruido en una imagen?</h3>
+    <blockquote class="fragment">
+        "Es cualquier tipo de fluctuaciones en intensidad o color que dificulte ver
+        lo que uno quiere ver."
+    </blockquote>
+    <br><br>
+    <p class="fragment">Tarea #1: estudiar el Cap&iacute;tulo 5 del DIP</p>
+</section>
+
+<section>
+    <section>
+        <h3>Modelo de degradaci&oacute;n/restauraci&oacute;n</h3>
+        <img src={{ url_for('static', filename='figures/model.png') }}>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">
+                Relaci&oacute;n entrada-salida previo a la restauraci&oacute;n
+                <ul>
+                    <li class="fragment">$g(x,y) = H(f(x,y)) + \eta(x,y)$</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                Si $H$ es lineal e invariante en el espacio
+                <ul>
+                    <li class="fragment">$g(x,y) = h(x,y) \ast f(x,y) + \eta(x,y)$</li>
+                    <li class="fragment">$G(u,v) = H(u,v)F(u,v) + N(u,v)$</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                Consideraciones y suposiciones
+                <ul>
+                    <li class="fragment">solo el modelo aditivo</li>
+                    <li class="fragment">el ruido no est&aacute; correlacionado con la imagen</li>
+                    <li class="fragment">&uacute;nica degradaci&oacute;n presente es el ruido</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Modelos de ruido</h3>
+    <ul>
+        <li class="fragment">
+            Principales fuentes de ruido
+            <ul>
+                <li class="fragment">durante adquisici&oacute;n</li>
+                <li class="fragment">durante transmisi&oacute;n</li>
+            </ul>
+        </li>
+        <li class="fragment">
+            Desempe&ntilde;o de los sensores
+            <ul>
+                <li class="fragment">condiciones del ambiente</li>
+                <li class="fragment">calidad del sensor</li>
+            </ul>
+        </li>
+        <li class="fragment">
+            Funciones de densidad de probabilidad de ruido
+            <ul>
+                <li class="fragment">comportamiento estad&iacute;stico de los valores de intensidad</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Ruido Gaussiano</h3>
+        <p>
+            La funci&oacute;n de densidad de la variable
+            <br>
+            aleatoria $z$ (intensidad) est&aacute; dada por
+            <br>
+            \[ p(z) = \frac{1}{\sqrt{2\pi\sigma}} e^{-\frac{(z - \bar{z})^2}{2\sigma^2}} \]
+        </p>
+        <ul>
+            <li>$\bar{z}$ es la media de $z$</li>
+            <li>desviaci&oacute;n est&aacute;ndar $\sigma$</li>
+            <li>varianza $\sigma^2$</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Ruido de Rayleigh</h3>
+        <p>
+            \[
+                p(z) = \begin{cases}
+                            \frac{2}{b}e^{-\frac{(z-a)^2}{b}}, \,\, z \geq a
+                            \\ \\
+                            0, \,\, z < a
+                        \end{cases}
+            \]
+        </p>
+        <br>
+        <p>$\bar{z} = a + \sqrt{\frac{\pi b}{4}}$</p>
+        <br>
+        <p>$\sigma^2 = \frac{b(4-\pi)}{4}$</p>
+    </section>
+
+    <section>
+        <h3>Ruido de Erlang</h3>
+        <p>
+            \[
+                p(z) = \begin{cases}
+                            \frac{a^{b}z^{b-1}}{(b-1)!}e^{-az}, \,\, z \geq 0
+                            \\ \\
+                            0, \,\, z < 0
+                        \end{cases}
+            \]
+        </p>
+        <br>
+        <p>$a>0$, y $b$ es un entero positivo</p>
+        <br>
+        <p>$\bar{z} = \frac{b}{a}$</p>
+        <br>
+        <p>$\sigma^2 = \frac{b}{a^2}$</p>
+    </section>
+
+    <section>
+        <h3>Ruido exponencial</h3>
+        <p>
+            \[
+                p(z) = \begin{cases}
+                            ae^{-az}, \,\, z \geq 0
+                            \\ \\
+                            0, \,\, z < 0
+                        \end{cases}
+            \]
+        </p>
+        <br>
+        <p>$a>0$</p>
+        <br>
+        <p>$\bar{z} = \frac{1}{a}$</p>
+        <br>
+        <p>$\sigma^2 = \frac{1}{a^2}$</p>
+    </section>
+
+    <section>
+        <h3>Ruido uniforme</h3>
+        <p>
+            \[
+                p(z) = \begin{cases}
+                            \frac{1}{b-a}, \,\, a \leq z \leq b
+                            \\ \\
+                            0, \,\, \text{en otro caso}
+                        \end{cases}
+            \]
+        </p>
+        <br>
+        <p>$\bar{z} = \frac{a+b}{2}$</p>
+        <br>
+        <p>$\sigma^2 = \frac{(b-a)^2}{12}$</p>
+    </section>
+
+    <section>
+        <h3>Ruido de impulso</h3>
+        <p>
+            \[
+                p(z) = \begin{cases}
+                            P_a, \,\, a \leq z = a
+                            \\ \\
+                            P_b, \,\, z = b
+                            \\ \\
+                            0, \text{en otro caso}
+                        \end{cases}
+            \]
+        </p>
+        <br>
+        <ul>
+            <li><i>salt and pepper</i></li>
+            <li>Para <i>uint8</i>, $a = 0$ y $b = 255$</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Filtros de eliminaci&oacute;n de ruido</h3>
+    <ul>
+        <li class="fragment">Recordar que $H[f]=f$</li>
+        <li class="fragment">
+            En este caso
+            <ul>
+                <li class="fragment">$g(x,y) = f(x,y) + \eta(x,y)$</li>
+                <li class="fragment">$G(u,v) = F(u,v) + N(u,v)$</li>
+            </ul>
+        </li>
+        <li class="fragment">
+            No se conoce el t&eacute;rmino del ruido
+            <ul>
+                <li class="fragment">caso especial: ruido peri&oacute;dico</li>
+            </ul>
+        </li>
+        <li class="fragment">$S_{xy}$: vecindad de dimensi&oacute;n $m \times n$ centrada en $(x,y)$</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Filtro de la media aritm&eacute;tica</h3>
+        <p>\[ \hat{f}(x,y) = \frac{1}{mn}\sum_{(s,t) \in S_{xy}} g(s,t) \]</p>
+        <br>
+        <ul>
+            <li class="fragment">Se puede implementar con convoluci&oacute;n</li>
+            <li class="fragment">El ruido se elimina mediante desenfoque en la imagen</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Filtro de la media geom&eacute;trica</h3>
+        <p>\[ \hat{f}(x,y) = [\prod_{(s,t) \in S_{xy}} g(s,t)]^{\frac{1}{mn}} \]</p>
+        <br>
+        <ul>
+            <li class="fragment">Buenos resultados comparado con el anterior</li>
+            <li class="fragment">Menos p&eacute;rdida de detalles en la imagen</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Filtro de la media harm&oacute;nica</h3>
+        <p>\[ \hat{f}(x,y) = \frac{mn}{\sum_{(s,t) \in S_{xy}} \frac{1}{g(s,t)}} \]</p>
+        <br>
+        <ul>
+            <li class="fragment">Funciona bien para "ruido de sal"</li>
+            <li class="fragment">Tambi&eacute;n para ruido gaussiano</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Filtro de la mediana</h3>
+        <p>\[ \hat{f}(x,y) = mediana_{(s,t) \in S_{xy}} \{ g(s,t) \} \]</p>
+        <br>
+        <ul>
+            <li class="fragment">Se incluye el valor de intensidad en $(x,y)$</li>
+            <li class="fragment">Muy buen desempe&ntilde;o en <i>salt & pepper</i></li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Filtro de la media no local</h3>
+        <p>\[ \hat{f}(x,y) = \sum_{(s,t) \in S_{xy}} w_{xy}(x',y')g(x',y') \]</p>
+        <br>
+        <p>\[ w_{xy}(x,y) = \frac{1}{W}e^{-\frac{(\|S_{xy} - S_{x'y'} \|)^2}{h^2}} \]</p>
+        <br>
+        <ul>
+            <li class="fragment">$w$ es un peso de similitud entre vecindades</li>
+            <li class="fragment">$W$ es un factor de normalizaci&oacute;n</li>
+            <li class="fragment">$h$ es un par&aacute;metro de filtro</li>
+            <li class="fragment">Lento pero excelente eliminando ruido (gaussiano)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Otros filtros</h3>
+        <ul>
+            <li class="fragment">Filtro Gaussiano</li>
+            <li class="fragment">Filtrado de Wiener</li>
+            <li class="fragment">Filtro de media contraharm&oacute;nica</li>
+            <li class="fragment">Filtros $max$ y $min$</li>
+            <li class="fragment">Filtro de punto medio (utiliza $max$ y $min$)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Medidas &uacute;tiles</h3>
+        <h4 class="fragment">Proporci&oacute;n se&ntilde;al ruido (Signal to Noise Ratio)</h4>
+        <p class="fragment">
+            \[
+                SNR = \frac{\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \hat{f}(x,y)^2}
+                           {\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} (f(x,y) - \hat{f}(x,y))^2}
+            \]
+        </p>
+        <br><br>
+        <h4 class="fragment">Error cuadr&aacute;tico medio (Mean Square Error)</h4>
+        <p class="fragment">\[ MSE = \frac{1}{MN} \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} [f(x,y) - \hat{f}(x,y)]^2\]</p>
+    </section>
+</section>
+
+<section>
+    <h3>Difusi&oacute;n anisotr&oacute;pica</h3>
+</section>
+
+<section>
+    <h3>Difusi&oacute;n anisotr&oacute;pica</h3>
+    <ul>
+        <li class="fragment">
+            Difusi&oacute;n en la imagen
+            <ul>
+                <li class="fragment">$f(x,y)$ como distribuci&oacute;n de temperatura</li>
+                <li class="fragment">propagaci&oacute;n del calor</li>
+            </ul>
+        </li>
+        <li class="fragment">
+            Anisotrop&iacute;a
+            <ul>
+                <li class="fragment">la temperatura var&iacute;a seg&uacute;n la direcci&oacute;n</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Ecuaci&oacute;n del calor</h3>
+    <p>\[ \frac{\partial u}{\partial t} = c \Delta u \]</p>
+    <ul>
+        <li class="fragment">$c$ es una tasa de difusi&oacute;n (constante)</li>
+        <li class="fragment">$u(x,t)$ es la temperatura en la posici&oacute;n $x$ en el tiempo $t$</li>
+        <li class="fragment">
+            $\Delta u \equiv \nabla \cdot \nabla u = \frac{\partial ^2u}{\partial x^2} + \frac{\partial ^2u}{\partial y^2}$
+            <ul>
+                <li class="fragment">aproximar las derivadas parciales</li>
+                <li class="fragment">teorema de Taylor</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>La Idea de Difusi&oacute;n Anisotr&oacute;pica</h3>
+        <p class="fragment">
+            Hacer que la tasa de difusi&oacute;n $c$ sea
+            <br>
+            una funci&oacute;n en el espacio tal que:
+            <br><br>
+            \[c(x)=
+                \begin{cases}
+                    \text{mayor en regiones uniformes} \\
+                    \text{menor cerca de contornos}
+                \end{cases}\]
+        </p>
+        <br>
+        <ul>
+            <li class="fragment">difusi&oacute;n m&aacute;s lenta sobre los contornos</li>
+            <li class="fragment">menor desenfoque en los bordes de los objetos</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <p class="fragment">Dos formas de utilizar la funci&oacute;n $c$</p>
+        <ul>
+            <li class="fragment">
+                $\frac{\partial f}{\partial t} = c(x) \Delta f$
+                <ul>
+                    <li class="fragment">isotr&oacute;pica pero var&iacute;a en el espacio</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                $\frac{\partial f}{\partial t} = \nabla \cdot (c(x) \nabla f)$
+                <ul>
+                    <li class="fragment">se hace notar la anisotrop&iacute;a cerca de los contornos</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">
+                Para obtener $c(x)$ se utiliza la magnitud del gradiente
+                <ul>
+                    <li class="fragment">$c(x) = g(\| \nabla f \|)$ <p><br></p></li>
+                </ul>
+            </li>
+
+            <li class="fragment">
+                Reemplazando $c(x)$ con $g(\| \nabla f \|)$
+                <ul>
+                    <li class="fragment">$\frac{\partial f}{\partial t} = \nabla \cdot (g(\| \nabla f \|) \nabla f)$ <p><br></p></li>
+
+                    <li class="fragment">$\frac{\partial f}{\partial t} = g(\| \nabla f \|) \Delta f$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Algunas funciones comunes</h3>
+    <ul>
+        <li class="fragment">
+            Perona-Malik
+            <ul>
+                <li>$g(r) = \frac{1}{1 + \frac{r^2}{K^2}}$ <p><br></p></li>
+            </ul>
+        </li>
+        <li class="fragment">
+            Tukey
+            <ul>
+                <li>
+                    $g(r) = \begin{cases}
+                                \frac{1}{2}(1 - (\frac{r}{\sigma})^2)^2, |r| \leq \sigma
+                                \\ 0, \text{en otro caso}
+                            \end{cases}$
+                    <p><br></p>
+                </li>
+            </ul>
+        </li>
+        <li class="fragment">
+            Estimador Minimax de Huber
+            <ul>
+                <li>
+                    $g(r) = \begin{cases}
+                                \frac{1}{\sigma}, |r| \leq \sigma
+                                \\ \frac{sign(r)}{r}, |r| > \sigma
+                            \end{cases}$
+                    <p><br></p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3><i>Deblurring</i></h3>
+</section>
+
+<section>
+    <section>
+        <h3><i>Deblurring</i></h3>
+        <blockquote>
+            "Dada una imagen borrosa (o desenfocada) <br>
+            y alguna informaci&oacute;n acerca de la borrosidad, <br>
+            obtener una aproximaci&oacute;n de la imagen <br>
+            sin degradar que brinde una mejor <br>
+            representaci&oacute;n de la escena."
+        </blockquote>
+    </section>
+
+    <section>
+        <h3>Desaf&iacute;o</h3>
+        <img src={{ url_for('static', filename='figures/blurredchallg.png') }}>
+        <p>Bibliograf&iacute;a</p>
+        <p>Deblurring images : matrices, spectra, and filtering <br>
+           Per Christian Hansen, James G. Nagy, Dianne P. O'Leary</p>
+    </section>
+</section>
+
+<section>
+    <h3>Causas del <i>Blurring</i></h3>
+    <ul>
+        <li>lente fuera de foco</li>
+        <li>turbulencias en la atm&oacute;sfera</li>
+        <li>fen&oacute;meno f&iacute;sico intr&iacute;nseco en la adquisici&oacute;n</li>
+        <li>
+            en general
+            <ul>
+                <li>"derrame" de informaci&oacute;n por los p&iacute;xeles vecinos</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Modelo lineal</h3>
+    <ul>
+        <li>proceso del <i>blurring</i> lineal</li>
+        <li>imagen deseada $X \in \mathbb{R}^{m \times n}$</li>
+        <li>imagen borrosa $B \in \mathbb{R}^{m \times n}$</li>
+        <li><i>blurring</i> independiente por filas y por columnas</li>
+        <li>
+            relaci&oacute;n entre $X$ y $B$
+            <ul>
+                <li>$A_{c} X A_{r}^t = B$</li>
+            </ul>
+
+        </li>
+        <li>
+            no funciona $X_{naive} = A_{c}^{-1} B A_{r}^{-t}$
+            <ul>
+                <li>influencia de errores de redondeo y en la propia $B$</li>
+            </ul>
+        </li>
+        <li>uso del &Aacute;lgebra Lineal y computaci&oacute;n de matrices</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Modelo lineal</h3>
+        <ul>
+            <li>problema mal planteado</li>
+            <li>
+                considerando ruido y errores de redondeo en $E$
+                <ul>
+                    <li>$B = B_{exact} + E = A_{c} X A_{r}^{t} + E$</li>
+                </ul>
+            </li>
+            <li>
+                por tanto
+                <ul>
+                    <li>$X_{naive} = A_{c}^{-1} B A_{r}^{-t} = A_{c}^{-1} B_{exact} A_{r}^{-t} + A_{c}^{-1} E A_{r}^{-t}$</li>
+                </ul>
+            </li>
+            <li>
+                tenemos entonces
+                <ul>
+                    <li>$X_{naive} = X + A_{c}^{-1} E A_{r}^{-t}$</li>
+                </ul>
+            </li>
+            <li>llamaremos al segundo sumando <i>ruido invertido</i></li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Ruido invertido</h3>
+        <ul>
+            <li>contribuci&oacute;n a la restauraci&oacute;n por parte del ruido aditivo</li>
+            <li>domina la soluci&oacute;n si sus t&eacute;rminos son mayores que los de $X$</li>
+            <li>ocurre en muchas situaciones</li>
+            <li>m&eacute;todos que manejen bien el ruido invertido</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Modelo lineal</h3>
+        <ul>
+            <li>Existe una matriz $A$ de grandes dimensiones</li>
+            <li>
+                $b = vec(B)$ y $x = vec(X)$ se relacionan por
+                <ul>
+                    <li>$Ax =  b$</li>
+                </ul>
+            </li>
+            <li>
+                el operador $vec(\cdot)$
+                <ul>
+                    <li>$b$ y $x$ son vectores de $N = m \times n$ elementos</li>
+                </ul>
+            </li>
+            <li>$A \in \mathbb{R}^{N \times N}$ representa el <i>blurring</i></li>
+            <li>
+                de esta forma
+                <ul>
+                    <li>$x_{naive} = x + A^{-1}e$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li>
+                la imagen del <i>deblurring</i> consta de dos componentes
+                <ul>
+                    <li>imagen exacta</li>
+                    <li>ruido invertido</li>
+                </ul>
+            </li>
+            <li>
+                si el <i>deblurring</i> luce inaceptable
+                <ul>
+                    <li>el ruido invertido contamina la restauraci&oacute;n</li>
+                </ul>
+            </li>
+
+            <li>uso de la SVD para comprender el ruido invertido</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3><i>Singular Value Decomposition</i> (SVD)</h3>
+    <ul>
+        <li>$A = U \Sigma V^t$</li>
+        <li>$U$ y $V$ son ortogonales</li>
+        <li>$\Sigma = diag(\sigma_i)$</li>
+        <li>valores singulares $\sigma_i$</li>
+        <li>
+            los elementos de $\Sigma$ aparecen en orden no creciente
+            <ul>
+                <li>$\sigma_1 \geq \sigma_2 \geq ... \geq \sigma_N \geq 0$</li>
+            </ul>
+        </li>
+        <li>el rango de $A$ es el n&uacute;mero de $\sigma_i$ positivos</li>
+        <li>si $i \neq j$ entonces $u_{i}^{t}u_j=0$ y $v_{i}^{t}v_j=0$</li>
+    </ul>
+</section>
+
+<section>
+    <h3>Analizando el ruido invertido</h3>
+    <ul>
+        <li>
+            asumiendo $\sigma_i > 0$
+            <ul>
+                <li>$A^{-1} = V \Sigma^{-1} U^{t}$</li>
+            </ul>
+        </li>
+        <li>
+            otra representaci&oacute;n &uacute;til de $A$
+            <ul>
+                <li>$A = \sum_{i=1}^{N} \sigma_i u_i v_{i}^{t}$</li>
+            </ul>
+        </li>
+        <li>
+            y de forma an&aacute;loga
+            <ul>
+                <li>$A^{-1} = \sum_{i=1}^{N} \frac{1}{\sigma_i} v_i u_{i}^{t}$</li>
+            </ul>
+        </li>
+        <li>
+            esto nos permite analizar mejor
+            <ul>
+                <li>$A^{-1}e = V \Sigma^{-1} U^t e = \sum_{i=1}^{N} \frac{u_{i}^{t} e}{\sigma_i} v_i$</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Propiedades frecuentes en <i>deblurring</i></h3>
+    <ul>
+        <li>
+            componentes de error $|u_{i}^{t}e|$ peque&ntilde;as
+            <ul>
+                <li>mismo orden de magnitud para todo $i$</li>
+            </ul>
+        </li>
+        <li>
+            los $\sigma_i$ decaen a un valor cerca de $0$
+            <ul>
+                <li>$cond(A) = \frac{\sigma_1}{\sigma_N}$ grande</li>
+            </ul>
+        </li>
+        <li>
+            vectores singulares de los $\sigma_i$ m&aacute;s peque&ntilde;os
+            <ul>
+                <li>informaci&oacute;n de alta frecuencia</li>
+                <li>$u_i$ y $v_i$ tienden a tener m&aacute;s cambios de signo</li>
+            </ul>
+        </li>
+        <li>
+            dejar fuera las componentes de alta frecuencia
+            <ul>
+                <li>$A_{k}^{-1} = \sum_{i=1}^{k} \frac{1}{\sigma_i} v_i u_{i}^{t}$</li>
+                <li>qu&eacute; $k < N$ utilizar?</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>La matriz del <i>blurring</i></h3>
+    <ul>
+        <li>
+            definiciones (informal)
+            <ul>
+                <li>Punto fuente</li>
+                <li><i>Point Spread Function</i> (PSF)</li>
+            </ul>
+        </li>
+        <li>
+            $A$ est&aacute; determinada por dos ingredientes
+            <ul>
+                <li>la PSF: c&oacute;mo cada p&iacute;xel es <i>blurred</i></li>
+                <li>condiciones de frontera: qu&eacute; se asume fuera de la escena</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Puntos fuente y la PSF</h3>
+    <ul>
+        <li>con frecuencia se obtienen experimentando</li>
+        <li>en algunos casos la PSF se expresa anal&iacute;ticamente</li>
+        <li>se asume PSF espacialmente invariante</li>
+        <li>dependencia del problema que se trate</li>
+        <li>
+            representaci&oacute;n de la PSF como una matriz $P$
+            <ul>
+                <li>dimensiones menores</li>
+                <li><i>padding</i> con ceros si es necesario</li>
+                <li>$P$ se escala para que sumen $1$ sus elementos</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>PSF conocidas</h3>
+    <ul>
+        <li><i>out-of-focus</i></li>
+        <li><i>gaussian</i></li>
+        <li><i>motion</i></li>
+        <li><i>Moffat</i></li>
+        <li>...</li>
+    </ul>
+</section>
+
+<section>
+    <h3>Estructuras matriciales en <i>deblurring</i></h3>
+    <ul>
+        <li>
+            con la PSF especificada se puede construir $A$
+            <ul>
+                <li>no es realmente necesario</li>
+            </ul>
+        </li>
+        <li>
+            propiedades: local e invariante espacialmente
+            <ul>
+                <li>estructuras especiales sobre $A$</li>
+            </ul>
+        </li>
+        <li>
+            algunas estructuras conocidas en <i>deblurring</i>
+            <ul>
+                <li>BCCB: <i>Block Circulant with Circulant Blocks</i></li>
+                <li>BHHB: <i>Block Hankel    with Hankel    Blocks</i></li>
+                <li>BTHB: <i>Block Toeplitz  with Hankel    Blocks</i></li>
+                <li>BHTB: <i>Block Hankel    with Toeplitz  Blocks</i></li>
+            </ul>
+        </li>
+        <li>
+            algoritmos r&aacute;pidos
+            <ul>
+                <li>en dependencia de la estructura de $A$</li>
+                <li>uso de la FFT y de la DCT</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Regularizaci&oacute;n</h3>
+    <ul>
+        <li>el filtrado es necesario cuando hay ruido presente</li>
+        <li>imposici&oacute;n de condiciones de regularidad en la soluci&oacute;n</li>
+        <li>selecci&oacute;n de un par&aacute;metro de regularizaci&oacute;n</li>
+        <li>
+            algunas formas de computar este par&aacute;metro
+            <ul>
+                <li>Principio de discrepancia</li>
+                <li>Validaci&oacute;n cruzada generalizada</li>
+                <li>Criterio de L-curva</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Regularizaci&oacute;n</h3>
+    <ul>
+        <li>
+            dos candidatos
+            <ul>
+                <li><i>Truncated SVD</i> (TSVD)</li>
+                <li>Regularizaci&oacute;n de Tikhonov</li>
+            </ul>
+        </li>
+        <li>
+            utilizando la expansi&oacute;n de filtrado
+            <ul>
+                <li>$x_{filt} = \sum_{i=1}^{N} \phi_i \frac{u_{i}^{t} b}{\sigma_i} v_i$</li>
+                <li>para valores singulares grandes $\phi_i \approx 1$</li>
+                <li>para valores peque&ntilde;os $\phi_i \approx 0$</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>M&eacute;todo de la TSVD</h3>
+    <p>Para este m&eacute;todo se definen los factores de filtrado como:</p>
+    <br>
+    <p>
+        \[
+            \phi_i \equiv
+                    \begin{cases}
+                        1, i = 1, 2, ..., k \\
+                        0, i = k+1, ..., N
+                    \end{cases}
+        \]
+    </p>
+    <br><br>
+    <ul>
+        <li>$k$ es un par&aacute;metro de truncamiento</li>
+    </ul>
+</section>
+
+<section>
+    <h3>M&eacute;todo de Tikhonov</h3>
+    <p>Se definen los factores de filtrado como:</p>
+    <br>
+    <p>
+        \[ \phi_i \equiv \frac{\sigma_{i}^{2}}{\sigma_{i}^{2} + \alpha^2}, i=1, 2, ..., N \]
+    </p>
+    <br><br>
+    <ul>
+        <li>$\alpha$ es un par&aacute;metro de regularizaci&oacute;n</li>
+        <li>
+            elecci&oacute;n de estos factores de filtrado
+            <ul>
+                <li>soluci&oacute;n $x_{\alpha}$ de un problema de minimizaci&oacute;n</li>
+                <li>$min_{x} \{ \| b - Ax \|_{2}^{2} + \alpha^2 \| x \|_{2}^{2}\} $</li>
+                <li>$\sigma_N \leq \alpha \leq \sigma_1$</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Otras t&eacute;cnicas de deblurring</h3>
+    <ul>
+        <li><i>Blind Image Deconvolution</i></li>
+        <li>Lucy-Richardson</li>
+        <li>Redes neuronales</li>
+        <li>Morfolog&iacute;a Matem&aacute;tica</li>
+        <li><i>Motion Density Function</i> (MSF)</li>
+        <li><i>Adaptive Sparse Domain Selection - Autoregressive</i> (ASDS-AR)</li>
+    </ul>
+</section>
+
+{% include "contents.html" %}
+
+{% endblock %}

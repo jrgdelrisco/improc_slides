@@ -1,0 +1,157 @@
+{% extends "template.html" %}
+
+{% block slides %}
+
+<section>
+    <h3>La Transformada de Fourier</h3>
+</section>
+
+<section>
+    <section>
+        <h3>Series de Fourier</h3>
+        <p class="fragment">Tenemos las funciones trigonom&eacute;tricas:</p>
+        <br>
+        <p class="fragment">$\sin(\frac{2 \pi k x}{N})$ ; $\cos(\frac{2 \pi k x}{N})$</p>
+        <p class="fragment">con $k \in \mathbb{Z}$, $N \in \mathbb{Z}$</p>
+        <ul>
+            <li class="fragment">se repiten $k$ veces en $0 \leq x \leq N$ ($\frac{N}{k}$ peri&oacute;dicas)</li>
+            <li class="fragment">per&iacute;odo $\frac{N}{k} \Rightarrow$ frecuencia $\frac{k}{N}$</li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Por ejemplo...</h3>
+        <img src={{ url_for('static', filename='figures/cossin.png') }}>
+    </section>
+
+    <section>
+        <h3>Teorema</h3>
+        <p class="fragment">Suponga que $f$ es una funci&oacute;n $L^2$ integrable $N$ - peri&oacute;dica.
+           Existen coeficientes $a_k$ y $b_k$ tales que</p>
+        <p class="fragment">\[f(x) = a_0 + \sum_{k=1}^{\infty}[a_k \cos(\frac{2 \pi k x}{N}) + b_k \sin(\frac{2 \pi k x}{N})] \]</p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">la serie se trunca hasta un $m$</li>
+            <li class="fragment">
+                otra notaci&oacute;n:
+                <br><br>
+                \[f(x) = \sum_{k=-m}^{m}c_k(\cos(\frac{2 \pi k x}{N}) + i \sin(\frac{2 \pi k x}{N})) \]
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <img src={{ url_for('static', filename='figures/noise.png') }}>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <img src={{ url_for('static', filename='figures/withoutnoise.png') }}>
+    </section>
+</section>
+
+<section>
+    <h3>Transformada de Fourier (FT)</h3>
+    <p class="fragment">Sea $f:\mathbb{R} \rightarrow \mathbb{R}$. Su Transformada de Fourier se define como</p>
+    <p class="fragment">\[F(\omega) = \mathcal{F} \{ f(x) \}(\omega) = \int_{-\infty}^{\infty}f(x)e^{-2 \pi i \omega x}dx \]</p>
+    <p class="fragment">La Transformada Inversa de Fourier se define como</p>
+    <p class="fragment">\[f(x) = \mathcal{F}^{-1} \{ F(\omega) \}(x) = \int_{-\infty}^{\infty}F(\omega)e^{2 \pi i \omega x}d \omega \]</p>
+</section>
+
+<section>
+    <h3>Transformada Discreta de Fourier (DFT)</h3>
+    <p class="fragment">Las funciones $f(x)$ y $F(\omega)$ son muestreadas:</p>
+    <p class="fragment">\[ f_{n}, n=0, 1, ..., N-1\]</p>
+    <p class="fragment">\[ F_{k}, k=0, 1, ..., N-1\]</p>
+    <p class="fragment">La Transformada Discreta de Fourier se define como</p>
+    <p class="fragment">\[ F_k = \sum_{n=0}^{N-1}f_{n}e^{\frac{-2 \pi i n k}{N}}, k = 0, 1, ..., N-1 \]</p>
+    <p class="fragment">y su inversa como</p>
+    <p class="fragment">\[ f_n = \frac{1}{N} \sum_{k=0}^{N-1}F_{k}e^{\frac{2 \pi i n k}{N}}, n = 0, 1, ..., N-1 \]</p>
+</section>
+
+<section>
+    <h3>Transformada R&aacute;pida de Fourier (FFT)</h3>
+    <ul>
+        <li class="fragment">algoritmo para computar la FT de una se&ntilde;al</li>
+        <li class="fragment">con las f&oacute;rmulas anteriores queda $O(N^2)$</li>
+        <li class="fragment">J. W. Cooley & John Tukey (1965)</li>
+        <li class="fragment">estrategia <i>"divide-and-conquer"</i></li>
+        <li class="fragment">el costo computacional de FFT es $O(N \log N)$</li>
+        <li class="fragment">para una se&ntilde;al 2D el costo es $O(N^2 \log N)$</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Transformada de Fourier 2D</h3>
+        <p class="fragment">Sea $f:\mathbb{R}^2 \rightarrow \mathbb{R}$. La Transformada de Fourier 2D
+            <br>
+            se define de la siguiente forma:</p>
+        <p class="fragment">\[F(\omega , \lambda) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}f(x,y)e^{-2 \pi i (\omega x + \lambda y)}dx dy \]</p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">$\omega x + \lambda y = \vec{\omega} \cdot \vec{x} = (\omega, \lambda) \cdot (x,y)$</li>
+            <li class="fragment">
+                esta transformada es separable
+                <br>
+                <p class="fragment">\[ F(\omega , \lambda) = \int_{-\infty}^{\infty} f(x,y)e^{-2 \pi i \omega x } dx
+                     \int_{-\infty}^{\infty}f(x,y)e^{-2 \pi i \lambda y} dy \]</p>
+            </li>
+            <li class="fragment">se puede utilizar FFT para se&ntilde;ales 1D en se&ntilde;ales ND</li>
+            <li class="fragment">funciones <i>fft</i> y <i>fft2</i> de Matlab</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Convoluci&oacute;n</h3>
+    <p class="fragment">Se define la convoluci&oacute;n entre dos funciones $f(x)$ y $g(x)$
+       <br>
+       como la integral</p>
+    <p class="fragment">\[ (f \ast g)(x) = \int_{-\infty}^{\infty}f(\tau)g(x - \tau)d\tau \]</p>
+    <p class="fragment">Para se&ntilde;ales discretas $f_n$ y $g_n$ queda como</p>
+    <p class="fragment">\[ (f \ast g)_n = \sum_{k=0}^{N-1}f_{k} \, g_{n-k}, n = 0, 1, ..., N-1 \]</p>
+</section>
+
+<section>
+    <h3>Convoluci&oacute;n y la Transformada de Fourier</h3>
+    <p class="fragment">Sean $f(x)$ y $g(x)$ dos funciones y tenemos adem&aacute;s</p>
+    <p class="fragment">$ F(\omega) = \mathcal{F} \{ f(x) \}(\omega) $</p>
+    <p class="fragment">$ G(\omega) = \mathcal{F} \{ g(x) \}(\omega) $ <br>
+       sus respectivas Transformadas de Fourier.</p>
+    <p class="fragment">Entonces se cumple</p>
+    <p class="fragment">$ \mathcal{F} \{ (f \ast g)(x) \}(\omega) = F(\omega)G(\omega)$</p>
+    <p class="fragment">De forma an&aacute;loga se cumple</p>
+    <p class="fragment">$ \mathcal{F}^{-1} \{ (F \ast G)(\omega) \}(x) = f(x)g(x)$</p>
+</section>
+
+<section>
+    <h3>Convoluci&oacute;n y la Transformada de Fourier</h3>
+    <p class="fragment">Sean $f_n$ y $g_n$ dos funciones discretas.</p>
+    <p class="fragment">Entonces se cumple</p>
+    <p class="fragment">$ \mathcal{F} \{ (f \ast g)_n \}_{k} = F_{k}G_{k}$</p>
+</section>
+
+<section>
+    <h3>Observaciones</h3>
+    <ul>
+        <li class="fragment">resultado anterior importante computacionalmente</li>
+        <li class="fragment">sobre frecuencia cero o t&eacute;rmino <i>DC</i></li>
+        <li class="fragment">convenios para mostrar el espectro de Fourier</li>
+        <li class="fragment">la frecuencia cero se encuentra en el centro</li>
+    </ul>
+    <br><br>
+    <p class="fragment">Tarea #1: Estudiar del DIP el Cap&iacute;tulo 4 <i>Filtering in the Frequency Domain</i></p>
+    <p class="fragment">Tarea #2: Buscar y verificar otras propiedades de FFT en Matlab</p>
+</section>
+
+{% include "contents.html" %}
+
+{% endblock %}

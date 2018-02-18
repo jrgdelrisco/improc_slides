@@ -1,0 +1,250 @@
+{% extends "template.html" %}
+
+{% block slides %}
+
+<section>
+    <h3>Introducci&oacute;n</h3>
+</section>
+
+<section>
+    <h3>Qu&eacute; es una imagen?</h3>
+    <blockquote>
+        "Una imagen digital se puede considerar como una representaci&oacute;n discreta
+        de datos que posee tanto informaci&oacute;n espacial (orden) como de intensidad (color)."
+    </blockquote>
+</section>
+
+<section>
+    <section>
+        <h3>Pero... m&aacute;s formal?</h3>
+        <p>
+            Una imagen digital <i>I(m, n)</i> representa la respuesta de un sensor
+            (o simplemente un valor de cierto inter&eacute;s) en una serie de posiciones fijas
+            (<i>m = 1, 2, ..., M; n = 1, 2, ..., N</i>) en coordenadas cartesianas <i>2D</i> y se obtiene desde una
+            se&ntilde;al espacial <i>2D</i> continua <i>I(x,y)</i> a trav&eacute;s de un proceso de muestreo
+            conocido como discretizaci&oacute;n.
+        </p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li class="fragment">Existen muchas definiciones de imagen digital
+                <ul>
+                    <li class="fragment">empleando funciones
+                        (${\scriptsize f: D_f \subset Z^n \rightarrow \lbrace 0, 1, ..., t_{max} \rbrace}$)</li>
+                    <li class="fragment">en dependencia de las dimensiones (<i>3D</i>, <i>I(x, y, z)</i>)</li>
+                    <li class="fragment">im&aacute;genes <i>4D</i> (dimensi&oacute;n del movimiento)</li>
+                    <li class="fragment">a trav&eacute;s de grafos o rejillas, etc...</li>
+                </ul>
+            </li>
+            <li class="fragment">Trabajaremos (principalmente) con la definici&oacute;n anterior
+                <ul>
+                    <li class="fragment">interpretaci&oacute;n matricial (<i>M</i> filas, <i>N</i> columnas)</li>
+                    <li class="fragment">interpretaci&oacute;n como se&ntilde;al continua (funci&oacute;n $\scriptsize I(x, y)$)</li>
+                </ul>
+            </li>
+            <li class="fragment">Elemento de la imagen: p&iacute;xel (o voxel)</li>
+        </ul>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/fig1.png') }} >
+    </section>
+</section>
+
+<section>
+    <h3>Procesamiento Digital de Im&aacute;genes</h3>
+    <blockquote>
+        "El campo del Procesamiento Digital de Im&aacute;genes se refiere
+        al procesamiento de <br> im&aacute;genes digitales mediante una <br> computadora digital."
+    </blockquote>
+</section>
+
+<section>
+    <h3>Sobre espacios de colores</h3>
+    <ul>
+        <li class="fragment">las im&aacute;genes se definen como matrices de <i>MxNx3</i></li>
+        <li class="fragment">estudio del ojo humano, espacios de colores <br> (RGB, HSI, HSV, CIELAB, CMYK, ...)</li>
+        <li class="fragment"><i>"full-color processing"</i> y <i>"pseudocolor processing"</i></li>
+    </ul>
+    <br><br>
+    <p class="fragment">Tarea #1: estudiar Cap&iacute;tulo 6 (<i>Color Image Processing</i>) del DIP.</p>
+</section>
+
+<section>
+    <section>
+        <h3>Muestreo y Cuantificaci&oacute;n</h3>
+        <ul>
+            <li class="fragment">
+                Conversi&oacute;n continuo $\longrightarrow$ digital (discretizar)
+                <img src={{ url_for('static', filename='figures/samp_quant.png') }}>
+            </li>
+            <li class="fragment">Resoluci&oacute;n espacial (columnas x filas, ej. 1024x768)</li>
+            <li class="fragment">Resoluci&oacute;n de <i>bit</i></li>
+            <li class="fragment">Resoluci&oacute;n temporal (fps)</li>
+        </ul>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/samp.png') }}>
+        <img class="fragment" src={{ url_for('static', filename='figures/quant.png') }}>
+    </section>
+</section>
+
+<section>
+    <h3>Tipos de datos (Matlab)</h3>
+    <ul class="fragment">
+        <li><i>double</i> (doble precisi&oacute;n, 8 bytes)</li>
+        <li><i>single</i> (precisi&oacute;n simple, 4 bytes)</li>
+        <li><i>uint8</i> (enteros no negativos, 8 bits)</li>
+        <li><i>uint16</i></li>
+        <li><i>uint32</i></li>
+        <li><i>int8</i> (enteros con signo, 1 byte)</li>
+        <li><i>int16</i></li>
+        <li><i>int32</i></li>
+        <li><i>char</i> (caracteres, 2 bytes)</li>
+        <li><i>logical</i> (im&aacute;genes binarias, 1 byte)</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Problemas conocidos</h3>
+        <ul>
+            <li class="fragment">Mejoramiento de im&aacute;genes
+            <ul>
+                <li class="fragment"><i>Denoising</i></li>
+                <li class="fragment"><i>Deblurring</i></li>
+                <li class="fragment"><i>Contrast enhancement</i></li>
+            </ul>
+            </li>
+            <li class="fragment">Segmentaci&oacute;n de im&aacute;genes</li>
+            <li class="fragment">Otros
+            <ul>
+                <li class="fragment">Corregistro (<i>Image Registration</i>)</li>
+                <li class="fragment">Reconstrucci&oacute;n de im&aacute;genes</li>
+                <li class="fragment">Reconocimiento de objetos</li>
+                <li class="fragment">Compresi&oacute;n de im&aacute;genes</li>
+                <li class="fragment">Detecci&oacute;n de contornos</li>
+            </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/xray_enhancement.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/contrast_enhancement.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/denoising.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/segmentation.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/aneurism.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/reconstruction.png') }}>
+    </section>
+
+    <section>
+        <img src={{ url_for('static', filename='figures/mrictregist.png') }}>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Transformaciones espaciales</h3>
+        <ul>
+            <li class="fragment">
+                Traslaci&oacute;n
+                \[u = x + a\]
+                \[v = y + b\]
+            </li>
+            <li class="fragment">
+                Rotaci&oacute;n
+                \[u =  \:\: x\cos{\theta} + y\sin{\theta}\]
+                \[v = -x\sin{\theta} + y\cos{\theta}\]
+            </li>
+            <li class="fragment">
+                Escalamiento
+                \[u = s_1x\]
+                \[v = s_2y\]
+            </li>
+        </ul>
+        <br><br>
+        <p class="fragment">Tarea #2: leer sobre transformaciones espaciales en DIP. Cap&iacute;tulo 2, ep&iacute;g. 2.6.5.</p>
+    </section>
+
+    <section>
+        <h3>Transformaciones afines</h3>
+        <ul>
+            <li class="fragment">
+                Rotaci&oacute;n
+                \[
+                \begin{pmatrix} u \\ v \end{pmatrix} =
+                \begin{pmatrix}
+                \cos\theta & \sin\theta \\
+                -\sin\theta & \cos\theta
+                \end{pmatrix}
+                \begin{pmatrix} x \\ y \end{pmatrix}
+                \]
+            </li>
+            <li class="fragment">
+                Escalamiento
+                \[
+                \begin{pmatrix} u \\ v \end{pmatrix} =
+                \begin{pmatrix}
+                s_1 & 0 \\
+                  0 & s_2
+                \end{pmatrix}
+                \begin{pmatrix} x \\ y \end{pmatrix}
+                \]
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Coordenadas homog&eacute;neas</h3>
+        <ul>
+            <li class="fragment">
+                No homog&eacute;nea
+                \[
+                \begin{pmatrix} u \\ v \end{pmatrix} =
+                \begin{pmatrix}
+                a & b \\
+                c & d
+                \end{pmatrix}
+                \begin{pmatrix} x \\ y \end{pmatrix} +
+                \begin{pmatrix} e \\ f \end{pmatrix}
+                \]
+            </li>
+            <li class="fragment">
+                Homog&eacute;nea
+                \[
+                \begin{pmatrix} u \\ v \\ 1 \end{pmatrix} =
+                \begin{pmatrix}
+                a & b & e \\
+                c & d & f \\
+                0 & 0 & 1
+                \end{pmatrix}
+                \begin{pmatrix} x \\ y \\ 1 \end{pmatrix} =
+                \begin{pmatrix} ax + by + e \\ cx + dy + f \\ 1 \end{pmatrix}
+                \]
+            </li>
+        </ul>
+    </section>
+</section>
+
+{% include "contents.html" %}
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends "template.html" %}
+
+{% block slides %}
+
+<section>
+    <h3>Laboratorio</h3>
+    <ol>
+        <li><a href="#/1">El entorno de trabajo de Matlab</a></li>
+        <li><a href="#/2">Transformada de Fourier y convoluci&oacute;n</a></li>
+        <li><a href="#/3">Trabajando con ficheros</a></li>
+        <li><a href="#/4">Introducci&oacute;n al mejoramiento de im&aacute;genes</a></li>
+        <li><a href="#/5">Eliminaci&oacute;n de ruido</a></li>
+        <li><a href="#/6"><i>Deblurring</i></a></li>
+    </ol>
+</section>
+
+<!-- Laboratorio #1 -->
+<section>
+    <h3>Introducci&oacute;n a Matlab</h3>
+    <ul>
+        <li>El entorno de trabajo de Matlab</li>
+        <li>
+            Algunas funciones sobre im&aacute;genes
+            <ul>
+                <li>imread & imwrite</li>
+                <li>imshow & imtool</li>
+                <li>imfinfo</li>
+                <li>colormap & colormapeditor</li>
+            </ul>
+        </li>
+        <li>
+            Operadores sobre im&aacute;genes
+            <ul>
+                <li>aritm&eacute;ticos, relacionales y l&oacute;gicos</li>
+                <li><i>indexing</i></li>
+            </ul>
+        </li>
+        <li>
+            Transformaciones espaciales
+            <ul>
+                <li>maketform</li>
+                <li>imrotate</li>
+            </ul>
+        </li>
+        <li>Otras funciones &uacute;tiles</li>
+    </ul>
+    <br><br>
+    <p>Tarea #1: estudiar Cap&iacute;tulo 2 del DIPUM</p>
+</section>
+
+<!-- Laboratorio #2 -->
+<section>
+    <h3>Transformada de Fourier y convoluci&oacute;n</h3>
+    <ul>
+        <li>
+            Propiedades de la Transformada de Fourier
+            <ul>
+                <li><i>fft2</i> & <i>ifft2</i></li>
+                <li>visualizaci&oacute;n del espectro de Fourier</li>
+                <li><i>fftshift</i> & <i>ifftshift</i></li>
+            </ul>
+        </li>
+        <li>
+            Convoluci&oacute;n
+            <ul>
+                <li>relaci&oacute;n con la Transformada de Fourier</li>
+                <li><i>kernels</i></li>
+            </ul>
+        </li>
+        <li>
+            Otras funciones &uacute;tiles
+            <ul>
+                <li><i>conv2</i></li>
+                <li><i>real</i></li>
+                <li><i>repmat</i></li>
+                <li><i>meshgrid</i></li>
+            </ul>
+        </li>
+    </ul>
+    <br><br>
+    <p>Tarea #2: estudiar Cap&iacute;tulo 4 del DIPUM</p>
+</section>
+
+<!-- Laboratorio #3 -->
+<section>
+    <h3>Trabajando con ficheros</h3>
+    <ul>
+        <li>
+            Un poco de programaci&oacute;n
+            <ul>
+                <li><i>if</i> & <i>for</i> & <i>while</i></li>
+                <li><i>pause</i></li>
+                <li><i>disp</i> & <i>input</i></li>
+            </ul>
+        </li>
+        <li>
+            Ficheros <i>DICOM</i>
+            <ul>
+                <li><i>dicomread</i> & <i>dicomwrite</i></li>
+                <li><i>dicominfo</i> & <i>dicomlookup</i></li>
+            </ul>
+        </li>
+        <li>
+            Otras funciones &uacute;tiles
+            <ul>
+                <li><i>montage</i></li>
+                <li><i>load</i> & <i>save</i></li>
+                <li><i>sprintf</i> & <i>strcat</i></li>
+                <li><i>uigetfile</i> & <i>uigetdir</i></li>
+                <li><i>dir</i></li>
+            </ul>
+        </li>
+    </ul>
+    <br><br>
+    <p>Tarea #3*: hacer <i>script</i> en Matlab</p>
+</section>
+
+<!-- Laboratorio #4 -->
+<section>
+    <h3>Mejoramiento de im&aacute;genes</h3>
+    <ul>
+        <li>
+            Resumen de funciones &uacute;tiles de Matlab
+            <ul>
+                <li>Ap&eacute;ndice A del DIPUM</li>
+            </ul>
+        </li>
+        <li>
+            Funciones importantes
+            <ul>
+                <li><i>imfilter</i> & <i>fspecial</i></li>
+                <li><i>nlfilter</i></li>
+                <li><i>imadjust</i></li>
+            </ul>
+        </li>
+        <li>
+            Trabajando con el histograma
+            <ul>
+                <li><i>imhist</i></li>
+                <li><i>histeq</i></li>
+                <li><i>adapthisteq</i></li>
+            </ul>
+        </li>
+    </ul>
+    <br><br>
+    <p>Tarea #4: comprobar otros filtros de mejoramiento</p>
+</section>
+
+<!-- Laboratorio #5 -->
+<section>
+    <h3>Eliminaci&oacute;n de ruido</h3>
+    <ul>
+        <li>
+            Crear im&aacute;genes con ruido
+            <ul>
+                <li><i>imnoise</i></li>
+            </ul>
+        </li>
+        <li>
+            Generar otros tipos de ruido
+            <ul>
+                <li><i>rand</i> & <i>randn</i></li>
+            </ul>
+        </li>
+        <li>
+            Emplear histograma para analizar ruido
+            <ul>
+                <li><i>hist</i></li>
+            </ul>
+        </li>
+        <li>
+            Funciones importantes
+            <ul>
+                <li><i>imfilter</i> & <i>fspecial</i></li>
+                <li><i>nlfilter</i></li>
+                <li><i>medfilt2</i></li>
+            </ul>
+        </li>
+    </ul>
+    <br><br>
+    <p>Tarea #5: leer del Cap&iacute;tulo 5 del DIPUM el ep&iacute;grafe 5.2</p>
+</section>
+
+<!-- Laboratorio #6 -->
+<section>
+    <h3><i>Deblurring</i></h3>
+    <ul>
+        <li>Biblioteca <i>HNO</i></li>
+        <li>
+            Creaci&oacute;n de PSF
+            <ul>
+                <li>imfilter*</li>
+            </ul>
+        </li>
+        <li>
+            Funciones de <i>deblurring</i>
+            <ul>
+                <li><i>deconvlucy</i></li>
+                <li><i>deconvblind</i></li>
+                <li><i>deconvreg</i></li>
+                <li><i>deconvwnr</i></li>
+            </ul>
+        </li>
+        <li>
+            Funciones &uacute;tiles
+            <ul>
+                <li><i>padarray</i></li>
+            </ul>
+        </li>
+    </ul>
+    <br><br>
+    <p>Tarea #6: estudiar para el examen con Matlab</p>
+</section>
+
+{% include "contents.html" %}
+
+{% endblock %}

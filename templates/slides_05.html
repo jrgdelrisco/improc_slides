@@ -1,0 +1,368 @@
+{% extends "template.html" %}
+
+{% block slides %}
+
+<section>
+    <h3>Segmentaci&oacute;n</h3>
+</section>
+
+<section>
+    <h3>Qu&eacute; es segmentaci&oacute;n de im&aacute;genes?</h3>
+    <blockquote>
+        "La segmentaci&oacute;n consiste en particionar una imagen en regiones homog&eacute;neas
+        respecto a una o varias caracter&iacute;sticas."
+    </blockquote>
+
+    <br><br>
+    <p>Tarea: estudiar Cap&iacute;tulo 10, <i>Image Segmentation</i> del DIP</p>
+    <p>Matlab: estudiar Cap&iacute;tulo 11, del DIPUM</p>
+</section>
+
+<section>
+    <section>
+        <h3>Pero... m&aacute;s formal?</h3>
+        <p>Sea $R$ la representaci&oacute;n de toda la regi&oacute;n espacial ocupada por una imagen.
+        Podemos ver la segmentaci&oacute;n de im&aacute;genes como el proceso que particiona $R$ en
+        $n$ subregiones $R_1, R_2, ..., R_n$ tales que se cumple:</p>
+        <ol>
+            <li>$\bigcup_{i=1}^{n} R_i = R$</li>
+            <li>$R_i$ es un conjunto conexo, $i = 1, 2, ..., n$</li>
+            <li>$R_i \bigcap R_j = \emptyset, \forall i \neq j$</li>
+            <li>$Q(R_i) = verdadero$, $i = 1, 2, ..., n$ </li>
+            <li>$Q(R_i \bigcup R_j) = falso$ para cualquier par de regiones adyacentes $R_i$ y $R_j$</li>
+        </ol>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li>
+                $Q(R_k)$ es un predicado l&oacute;gico definido sobre $R_k$
+                <ul>
+                    <li>por ejemplo: $Q(R_k) = verdadero$ si sus p&iacute;xeles tienen igual valor de intensidad</li>
+                </ul>
+            </li>
+            <li>se dice que dos regiones son adyacentes si su uni&oacute;n forma un conjunto conexo</li>
+            <li>
+                dos categor&iacute;as b&aacute;sicas de acuerdo a propiedades de intensidad
+                <ul>
+                    <li>discontinuidad (<i>edge-based segmentation</i>)</li>
+                    <li>similitud (<i>region-based segmentation</i>)</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Puntos, l&iacute;neas y contornos</h3>
+    <ul>
+        <li>
+            Contorno o borde
+            <ul>
+                <li>p&iacute;xeles con cambios bruscos de intensidad</li>
+            </ul>
+        </li>
+        <li>
+            L&iacute;nea
+            <ul>
+                <li>segmento de contorno</li>
+            </ul>
+        </li>
+        <li>
+            Punto
+            <ul>
+                <li>l&iacute;nea de un solo p&iacute;xel</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Puntos, l&iacute;neas y contornos</h3>
+        <ul>
+            <li>cambios locales en intensidad</li>
+            <li>empleo de derivadas para su detecci&oacute;n</li>
+            <li>aproximaciones usando Taylor</li>
+            <li>
+                primera derivada
+                <ul>
+                    <li>$(\frac{\partial f}{\partial x}) = f'(x) = f(x + 1) - f(x)$</li>
+                </ul>
+            </li>
+            <li>
+                segunda derivada
+                <ul>
+                    <li>$(\frac{\partial^2f}{\partial x^2}) = f''(x) = f(x + 1) - 2f(x) + f(x - 1)$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li>
+                derivadas de primer orden
+                <ul>
+                    <li>producen contornos gruesos</li>
+                </ul>
+            </li>
+            <li>
+                derivadas de segundo orden
+                <ul>
+                    <li>detalles finos (l&iacute;neas delgadas, puntos aislados)</li>
+                </ul>
+            </li>
+            <li>
+                signo de la segunda derivada
+                <ul>
+                    <li>transiciones de intensidades (oscuro-claro, claro-oscuro)</li>
+                </ul>
+            </li>
+            <li>
+                filtrado espacial
+                <ul>
+                    <li><i>kernels</i> para computar derivadas</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <p>Detecci&oacute;n de puntos (<i>kernel laplaciano</i>)</p>
+        <br>
+        <p>
+            \[
+                \begin{pmatrix}
+                    1 &  1 &  1 \\
+                    1 & -8 &  1 \\
+                    1 &  1 &  1
+                \end{pmatrix}
+            \]
+        </p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <p>Detecci&oacute;n de l&iacute;neas horizontales</p>
+        <br>
+        <p>
+            \[
+                \begin{pmatrix}
+                    -1 & -1 & -1 \\
+                     2 &  2 &  2 \\
+                    -1 & -1 & -1
+                \end{pmatrix}
+            \]
+        </p>
+        <br>
+        <p>Detecci&oacute;n de l&iacute;neas verticales</p>
+        <br>
+        <p>
+            \[
+                \begin{pmatrix}
+                    -1 &  2 & -1 \\
+                    -1 &  2 & -1 \\
+                    -1 &  2 & -1
+                \end{pmatrix}
+            \]
+        </p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <p>Detecci&oacute;n de l&iacute;neas diagonales ($+45^\circ$)</p>
+        <br>
+        <p>
+            \[
+                \begin{pmatrix}
+                     2 & -1 & -1 \\
+                    -1 &  2 & -1 \\
+                    -1 & -1 &  2
+                \end{pmatrix}
+            \]
+        </p>
+        <br>
+        <p>Detecci&oacute;n de l&iacute;neas diagonales ($-45^\circ$)</p>
+        <br>
+        <p>
+            \[
+                \begin{pmatrix}
+                    -1 & -1 &  2 \\
+                    -1 &  2 & -1 \\
+                     2 & -1 & -1
+                \end{pmatrix}
+            \]
+        </p>
+    </section>
+</section>
+
+<section>
+    <h3>Detecci&oacute;n de contornos</h3>
+    <ul>
+        <li>
+            se pueden aprovechar detectores de l&iacute;neas
+            <ul>
+                <li>sumando im&aacute;genes resultantes</li>
+            </ul>
+        </li>
+        <li>
+            en general se realizan tres pasos fundamentales
+            <ol>
+                <li>suavizado de la imagen (eliminar ruido)</li>
+                <li>detecci&oacute;n de puntos de contorno (candidatos)</li>
+                <li>localizaci&oacute;n de contorno</li>
+            </ol>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Detectores de contornos cl&aacute;sicos</h3>
+    <ul>
+        <li>
+            operadores de gradiente
+            <ul>
+                <li>Roberts</li>
+                <li>Prewitt</li>
+                <li>Sobel</li>
+            </ul>
+        </li>
+        <li>Detector de contornos de Canny</li>
+        <li>Transformada de Hough</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h3>Umbralizaci&oacute;n</h3>
+        <p>
+            Dado un valor $T$ llamado umbral (<i>threshold</i>), una imagen $g(x,y)$
+            segmentada a partir de $f(x,y)$ est&aacute; dada por:
+        </p>
+        <br>
+        <p>
+            \[
+                g(x,y) =
+                        \begin{cases}
+                                1, \text{si} f(x,y) > T \\
+                                0, \text{si} f(x,y) \leq T
+                        \end{cases}
+            \]
+        </p>
+    </section>
+
+    <section>
+        <h3>Observaciones</h3>
+        <ul>
+            <li>muy simple de implementar</li>
+            <li>muy eficiente computacionalmente</li>
+            <li>empleo del histograma</li>
+            <li>
+                variantes
+                <ul>
+                    <li>umbralizaci&oacute;n global ($T$ constante)</li>
+                    <li>umbralizaci&oacute;n variable ($T$ cambia)</li>
+                    <li>umbralizaci&oacute;n local o regional (vecindad de $(x,y)$)</li>
+                    <li>umbralizaci&oacute;n adaptativa ($T$ depende de coord. espaciales)</li>
+                    <li>umbralizaci&oacute;n m&uacute;ltiple (varios $T_i$)</li>
+                </ul>
+            </li>
+            <li>umbralizaci&oacute;n global &oacute;ptima (Otsu)</li>
+            <li>mejorar selecci&oacute;n de $T$ usando detectores de contornos</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h3>Segmentaci&oacute;n basada en regiones</h3>
+    <ul>
+        <li>encontrar directamente las regiones</li>
+        <li>
+            para construirlas dos estrategias se destacan
+            <ul>
+                <li>crecimiento de regiones (<i>bottom-up</i>)</li>
+                <li>partici&oacute;n y mezcla (<i>top-down</i>)</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Crecimiento de regiones</h3>
+    <ul>
+        <li>agrupar p&iacute;xeles o subregiones en regiones mayores</li>
+        <li>criterio predefinido de crecimiento</li>
+        <li>es com&uacute;n comenzar con un conjunto de p&iacute;xeles semillas</li>
+        <li>la selecci&oacute;n del criterio para crecer
+            <ul>
+                <li>el problema</li>
+                <li>los descriptores</li>
+                <li>el crecimiento debe detenerse</li>
+            </ul>
+        </li>
+        <li>
+            tipos de descriptores
+            <ul>
+                <li>intensidad</li>
+                <li>color</li>
+                <li>texturas</li>
+                <li>similitud en vecindades (historial)</li>
+                <li>otros</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h3>Partici&oacute;n y mezcla de regiones</h3>
+    <ul>
+        <li>subdividir la imagen en regiones arbitrarias disjuntas</li>
+        <li>
+            luego se mezclan y/o particionan estas regiones
+            <ul>
+                <li>criterios de mezcla y partici&oacute;n</li>
+            </ul>
+        </li>
+        <li>se detiene cuando no hayan regiones para mezclar</li>
+        <li>es muy &uacute;til la representaci&oacute;n de las particiones con <i>quadtrees</i></li>
+    </ul>
+</section>
+
+<section>
+    <h3>M&aacute;s estrategias?</h3>
+    <ul>
+        <li>
+            Morfolog&iacute;a Matem&aacute;tica
+            <ul>
+                <li>Transformada de <i>Watershed</i></li>
+                <li>Transformada de <i>Waterfall</i></li>
+            </ul>
+        </li>
+        <li>
+            <i>Machine Learning</i>
+            <ul>
+                <li><i>Neural Networks</i></li>
+                <li><i>Spectral Clustering</i></li>
+                <li><i>K-Means</i></li>
+                <li><i>Mean-Shift</i></li>
+            </ul>
+        </li>
+        <li>
+            Teor&iacute;a de Grafos
+            <ul>
+                <li><i>Graph-Cut</i></li>
+            </ul>
+        </li>
+        <li><i>Grab-Cut</i> (<i>foreground</i> y <i>background</i>)</li>
+        <li>Otros</li>
+    </ul>
+
+</section>
+
+{% include "contents.html" %}
+
+{% endblock %}
